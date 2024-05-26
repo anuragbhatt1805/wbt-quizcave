@@ -124,14 +124,9 @@ UserSchema.pre("save", async function (next) {
     next();
 });
 
-export const User = mongoose.model("User", UserSchema);
-
 UserSchema.methods.verifyPassword = async function (password){
+    console.log(password, this);
     return await bcrypt.compare(password, this.password);
-}
-
-UserSchema.methods.isVerified = function () {
-    return this.verified;
 }
 
 UserSchema.methods.generateAccessToken = async function() {
@@ -161,3 +156,5 @@ UserSchema.methods.generateRefreshToken = async function() {
         }
     )
 }
+
+export const User = mongoose.model("User", UserSchema);

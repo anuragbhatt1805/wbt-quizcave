@@ -14,3 +14,6 @@ app.use(cookieParser());
 app.use(express.static("public"));
 
 // Routes for the app
+import { AdminUserRouter } from './routes/admin/user.routes.js';
+
+app.use("/api/v1/admin/user", AdminUserRouter);
