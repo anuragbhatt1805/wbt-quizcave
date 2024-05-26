@@ -73,6 +73,8 @@ const ContestSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
+}, {
+    timestamps: true
 });
 
 export const Contest = mongoose.model('Contest', ContestSchema);

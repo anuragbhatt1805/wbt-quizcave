@@ -12,6 +12,10 @@ export const RegisterUser = AsyncHandler(async (req, res) => {
         //     throw new ApiError(401, "Unauthorized Access");
         // }
 
+        // if (req.user.role !== "admin") {
+        //     throw new ApiError(401, "Unauthorized Access");
+        // }
+
         const { name, email, phone, userId, password, designation } = req.body;
 
         if (!name || !email || !phone || !userId || !password || !designation) {
@@ -66,8 +70,6 @@ export const RegisterUser = AsyncHandler(async (req, res) => {
 
 export const LoginUser = AsyncHandler(async (req, res) => {
     try{
-
-        console.log(req.body)
         const { userId, password } = req.body;
 
         if (!userId || !password) {

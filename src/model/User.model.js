@@ -115,6 +115,8 @@ const UserSchema = new mongoose.Schema({
     resume: {
         type: String,
     }
+}, {
+    timestamps: true
 })
 
 UserSchema.pre("save", async function (next) {
