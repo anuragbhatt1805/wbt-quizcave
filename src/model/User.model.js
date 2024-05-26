@@ -75,9 +75,6 @@ const UserSchema = new mongoose.Schema({
     studentId: {
         type: String,
     },
-    dob: {
-        type: Date
-    },
     currAddress: {
         type: AddressSchema
     },
