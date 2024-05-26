@@ -129,3 +129,68 @@ export const GetUserInfo = AsyncHandler(async (req, res) => {
         throw new ApiError(400, error.message);
     }
 });
+
+export const DeleteUser = AsyncHandler(async (req, res) => {
+    try {
+        if (!req.user) {
+            throw new ApiError(401, "Unauthorized Access");
+        }
+
+        const user = await User.findByIdAndDelete(req.user._id);
+
+        if (!user) {
+            throw new ApiError(400, "User not found");
+        }
+
+        return res.status(200).json(new ApiResponse(200, null, "User deleted successfully"));
+    } catch (error) {
+        throw new ApiError(400, error.message);
+    }
+});
+
+export const UpdateUser = AsyncHandler(async (req, res) => {
+    try {
+        if (!req.user) {
+            throw new ApiError(401, "Unauthorized Access");
+        }
+
+        const data = {};
+
+        if ("name" in req.body) {
+            data.name = req.body.name;
+        }
+
+        if ("email" in req.body) {
+            data.email = req.body.email;
+        }
+
+        if ("phone" in req.body) {
+            data.phone = req.body.phone;
+        }
+
+        if ("designation" in req.body) {
+            data.designation = req.body.designation;
+        }
+
+        if (req?.files?.profile?.length > 0) {
+            if (req?.user?.profilePic) {
+                const profileDir = path.join("public", "uploads", path.basename(req.user.profilePic));
+                if (fs.existsSync(profileDir)) {
+                    fs.unlinkSync(profileDir);
+                }
+            }
+            data.profilePic = req?.files?.profile[0]?.path;
+        }
+
+        const user = await User.findByIdAndUpdate(req.user._id,
+            data, { new: true }).select("-password -_id -__v");
+
+        if (!user) {
+            throw new ApiError(400, "User not found");
+        }
+
+        return res.status(200).json(new ApiResponse(200, user, "User information updated successfully"));
+    } catch (error) {
+        throw new ApiError(400, error.message);
+    }
+});

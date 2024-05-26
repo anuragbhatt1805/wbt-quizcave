@@ -104,13 +104,11 @@ export const RemoveContest = AsyncHandler(async (req, res) => {
             throw new ApiError(401, "Unauthorized Access");
         }
 
-        const contest = await Contest.findById(req.params.id);
+        const contest = await Contest.findByIdAndDelete(req.params.id);
 
         if (!contest) {
             throw new ApiError(404, "Contest not found");
         }
-
-        await contest.remove();
 
         return res.status(200).json(new ApiResponse(200, contest, "Contest removed successfully"));
     } catch (error) {
