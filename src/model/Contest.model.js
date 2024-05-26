@@ -61,6 +61,10 @@ const ContestSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    registration: {
+        type: Boolean,
+        default: false
+    },
     registered: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'User'

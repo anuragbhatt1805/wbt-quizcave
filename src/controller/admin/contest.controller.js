@@ -60,10 +60,6 @@ export const UpdateContest = AsyncHandler(async (req, res) => {
             throw new ApiError(404, "Contest not found");
         }
 
-        const {
-            name, description, duration, rules, startDate, endDate, active
-        } = req.body;
-
         if ("name" in req.body) {
             contest.name = name.trim();
         }
@@ -84,6 +80,10 @@ export const UpdateContest = AsyncHandler(async (req, res) => {
         }
         if ("active" in req.body) {
             contest.active = active ? active : false;
+        }
+
+        if ("registration" in req.body) {
+            contest.registration = registration ? registration : false;
         }
 
         await contest.save();
