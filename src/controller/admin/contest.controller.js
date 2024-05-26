@@ -44,6 +44,56 @@ export const CreateContest = AsyncHandler(async (req, res) => {
     }
 });
 
+export const UpdateContest = AsyncHandler(async (req, res) => {
+    try {
+        if (!req.user) {
+            throw new ApiError(401, "Unauthorized Access");
+        }
+
+        if (req.user.role !== "admin") {
+            throw new ApiError(401, "Unauthorized Access");
+        }
+
+        const contest = await Contest.findById(req.params.id);
+
+        if (!contest) {
+            throw new ApiError(404, "Contest not found");
+        }
+
+        const {
+            name, description, duration, rules, startDate, endDate, active
+        } = req.body;
+
+        if ("name" in req.body) {
+            contest.name = name.trim();
+        }
+        if ("description" in req.body) {
+            contest.description = description;
+        }
+        if ("duration" in req.body) {
+            contest.duration = Number(duration);
+        }
+        if ("rules" in req.body) {
+            contest.rules = rules;
+        }
+        if ("startDate" in req.body) {
+            contest.startDate = new Date(startDate);
+        }
+        if ("endDate" in req.body) {
+            contest.endDate = new Date(endDate);
+        }
+        if ("active" in req.body) {
+            contest.active = active ? active : false;
+        }
+
+        await contest.save();
+
+        return res.status(200).json(new ApiResponse(200, contest, "Contest updated successfully"));
+    } catch (error) {
+        throw new ApiError(400, error.message);
+    }
+});
+
 export const RemoveContest = AsyncHandler(async (req, res) => {
     try {
         if (!req.user) {
@@ -119,6 +169,65 @@ export const AddQuestion = AsyncHandler(async (req, res) => {
         const addedQuestion = contest.questions[contest.questions.length - 1];
 
         return res.status(201).json(new ApiResponse(201, addedQuestion, "Question added successfully"));
+    } catch (error) {
+        throw new ApiError(400, error.message);
+    }
+});
+
+export const UpdateQuestion = AsyncHandler(async (req, res) => {
+    try {
+        if (!req.user) {
+            throw new ApiError(401, "Unauthorized Access");
+        }
+
+        if (req.user.role !== "admin") {
+            throw new ApiError(401, "Unauthorized Access");
+        }
+
+        const contest = await Contest.findById(req.params.id);
+
+        if (!contest) {
+            throw new ApiError(404, "Contest not found");
+        }
+
+        const questionInfo = contest.questions.id(req.params.questionId);
+
+        if (!questionInfo) {
+            throw new ApiError(404, "Question not found");
+        }
+
+        if ("question" in req.body) {
+            questionInfo.question = question;
+        }
+        if ("type" in req.body) {
+            questionInfo.type = type;
+        }
+        if ("marks" in req.body) {
+            questionInfo.marks = marks;
+        }
+
+        if (type === "multiple") {
+            questionInfo.multipleQuestion = req.body.multipleQuestion;
+            questionInfo.multipleAnswer = req.body.multipleAnswer;
+        } else {
+            questionInfo.singleAnswer = req.body.singleAnswer;
+        }
+
+        if (type === "mcq") {
+            questionInfo.mcqOptions = req.body.options || req.body.mcqOptions;
+        }
+
+        if ("questionImage" in req.file) {
+            if (questionInfo.questionImage) {
+                const imagePath = path.join("public", question.questionImage);
+                await fs.unlinkSync(imagePath);
+            }
+            questionInfo.questionImage = path.join("uploads", path.basename(req?.file?.questionImage[0]?.path));
+        }
+
+        await contest.save();
+
+        return res.status(200).json(new ApiResponse(200, question, "Question updated successfully"));
     } catch (error) {
         throw new ApiError(400, error.message);
     }
