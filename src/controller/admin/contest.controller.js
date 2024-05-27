@@ -264,7 +264,7 @@ export const RemoveQuestion = AsyncHandler(async (req, res) => {
             await fs.unlinkSync(imagePath);
         }
 
-        question.remove();
+        contest.questions.splice(contest.questions.indexOf(question), 1);
         await contest.save();
 
         return res.status(200).json(new ApiResponse(200, contest.questions, "Question removed successfully"));
