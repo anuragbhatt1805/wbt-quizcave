@@ -7,7 +7,7 @@ const AnswerSchema = new mongoose.Schema({
         required: true
     },
     answer: {
-        type: String,
+        type: [String],
         required: true
     },
     marks: {
@@ -37,6 +37,10 @@ const ResultSchema = new mongoose.Schema({
     },
     timeTaken: {
         type: Number
+    },
+    declared: {
+        type: Boolean,
+        default: false
     },
     result: {
         type: String

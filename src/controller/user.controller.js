@@ -1,7 +1,7 @@
 import { ApiError } from "../util/ApiError.js";
 import { ApiResponse } from "../util/ApiResponse.js";
 import { AsyncHandler } from "../util/AsyncHandler.js";
-import { User } from "../model/user.model.js";
+import { User } from "../model/User.model.js"
 import { generateToken } from "../util/TokenGeneration.js";
 import path from "path";
 

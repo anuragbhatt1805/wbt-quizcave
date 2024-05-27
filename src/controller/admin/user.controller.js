@@ -4,7 +4,6 @@ import { AsyncHandler } from "../../util/AsyncHandler.js";
 import { generateToken } from "../../util/TokenGeneration.js";
 import { User } from "../../model/User.model.js";
 import path from "path";
-import { trusted } from "mongoose";
 
 export const RegisterUser = AsyncHandler(async (req, res) => {
     try {
