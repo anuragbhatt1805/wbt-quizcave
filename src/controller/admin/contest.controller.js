@@ -156,7 +156,11 @@ export const AddQuestion = AsyncHandler(async (req, res) => {
         }
 
         if (type === "mcq") {
-            data.mcqOptions = req.body.options || req.body.mcqOptions;
+            let options = req.body.options;
+            if (typeof options === "string") {
+                options = options.split(",").map((option) => option.trim());
+            }
+            data.mcqOptions = options;
         }
 
         if (req?.files && req.files.length > 0 && req?.files?.questionImage?.length > 0) {
