@@ -2,7 +2,6 @@ import { ApiError } from "../../util/ApiError.js";
 import { ApiResponse } from "../../util/ApiResponse.js";
 import { AsyncHandler } from "../../util/AsyncHandler.js";
 import { Contest } from "../../model/Contest.model.js";
-import { User } from "../../model/User.model.js";
 import path from "path";
 
 export const CreateContest = AsyncHandler(async (req, res) => {
@@ -154,7 +153,7 @@ export const AddQuestion = AsyncHandler(async (req, res) => {
                 multiQuestion = multiQuestion.split(",").map((question) => question.trim());
             }
             data.multipleQuestion = multiQuestion;
-            
+
             let multiAnswer = req.body.multipleAnswer;
             if (typeof multiAnswer === "string") {
                 multiAnswer = multiAnswer.split(",").map((answer) => answer.trim());
@@ -220,14 +219,26 @@ export const UpdateQuestion = AsyncHandler(async (req, res) => {
         }
 
         if (type === "multiple") {
-            questionInfo.multipleQuestion = req?.body?.multipleQuestion;
-            questionInfo.multipleAnswer = req?.body?.multipleAnswer;
+            let multiQuestion = req.body.multipleQuestion;
+            if (typeof multiQuestion === "string") {
+                multiQuestion = multiQuestion.split(",").map((question) => question.trim());
+            }
+            questionInfo.multipleQuestion = multiQuestion;
+            let multiAnswer = req.body.multipleAnswer;
+            if (typeof multiAnswer === "string") {
+                multiAnswer = multiAnswer.split(",").map((answer) => answer.trim());
+            }
+            questionInfo.multipleAnswer = multiAnswer;
         } else {
             questionInfo.singleAnswer = req?.body?.singleAnswer;
         }
 
         if (type === "mcq") {
-            questionInfo.mcqOptions = req?.body?.options || req?.body?.mcqOptions;
+            let options = req.body.options;
+            if (typeof options === "string") {
+                options = options.split(",").map((option) => option.trim());
+            }
+            questionInfo.mcqOptions = options;
         }
 
         if ("questionImage" in req.file) {
