@@ -46,6 +46,11 @@ export const GetResultsForContest = AsyncHandler(async (req, res) => {
             throw new ApiError(403, "Access Forbidden");
         }
 
+        const contest = await Contest.findById(req.params.id);
+        if (!contest){
+            throw new ApiError(404, "Contest Not Found");
+        }
+
         const results = await Result.find({contestId: contest._id, declared: true}).populate("userId").select("-answers");
 
         if (!results){
@@ -87,10 +92,14 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
             throw new ApiError(404, "No Results Found");
         }
 
+        if (!results.declared){
+            throw new ApiError(400, "Results Already Declared");
+        }
+
         results.forEach(async (result) => {
             let total = 0;
             result.answers.forEach(answer => {
-                const question = contest.questions.find(question => question._id === answer.questionId);
+                const question = contest.questions.id(answer.questionId);
                 if (question.type === "multiple"){
                     let res = true;
                     question.multipleAnswer.forEach((ans, index) => {
