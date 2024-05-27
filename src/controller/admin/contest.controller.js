@@ -149,10 +149,19 @@ export const AddQuestion = AsyncHandler(async (req, res) => {
         }
 
         if (type === "multiple") {
-            data.multipleQuestion = req.body.multipleQuestion;
-            data.multipleAnswer = req.body.multipleAnswer;
+            let multiQuestion = req.body.multipleQuestion;
+            if (typeof multiQuestion === "string") {
+                multiQuestion = multiQuestion.split(",").map((question) => question.trim());
+            }
+            data.multipleQuestion = multiQuestion;
+            
+            let multiAnswer = req.body.multipleAnswer;
+            if (typeof multiAnswer === "string") {
+                multiAnswer = multiAnswer.split(",").map((answer) => answer.trim());
+            }
+            data.multipleAnswer = multiAnswer;
         } else {
-            data.singleAnswer = req.body.singleAnswer;
+            data.answer = req.body.singleAnswer;
         }
 
         if (type === "mcq") {
