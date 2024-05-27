@@ -10,7 +10,7 @@ export const GetAllContests = AsyncHandler(async (req, res) => {
             throw new ApiError(401, "Unauthorized");
         }
 
-        const contests = await Contest.find({active: true, endDate: {$gt: new Date()}})
+        const contests = await Contest.find({active: true, endDate: {$gt: new Date()}, declared: false})
             .select("-questions -registered -participants -createdBy -updatedAt -__v")
             .sort({startDate: -1});
 

@@ -76,6 +76,13 @@ const ContestSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    declared: {
+        type: Boolean,
+        default: false
+    },
+    passingMarks: {
+        type: Number
     }
 }, {
     timestamps: true

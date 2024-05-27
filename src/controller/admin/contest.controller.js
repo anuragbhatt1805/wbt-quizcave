@@ -61,29 +61,31 @@ export const UpdateContest = AsyncHandler(async (req, res) => {
         }
 
         if ("name" in req.body) {
-            contest.name = name.trim();
+            contest.name = req?.body?.name.trim();
         }
         if ("description" in req.body) {
-            contest.description = description;
+            contest.description = req?.body?.description;
         }
         if ("duration" in req.body) {
-            contest.duration = Number(duration);
+            contest.duration = Number(req?.body?.duration);
         }
         if ("rules" in req.body) {
-            contest.rules = rules;
+            contest.rules = req?.body?.rules;
         }
         if ("startDate" in req.body) {
-            contest.startDate = new Date(startDate);
+            contest.startDate = new Date(req?.body?.startDate);
         }
         if ("endDate" in req.body) {
-            contest.endDate = new Date(endDate);
+            contest.endDate = new Date(req?.body?.endDate);
         }
         if ("active" in req.body) {
-            contest.active = active ? active : false;
+            contest.active = req?.body?.active ? req?.body?.active : false;
         }
-
+        if ("passingMarks" in req.body) {
+            contest.passingMarks = Number(req?.body?.passingMarks);
+        }
         if ("registration" in req.body) {
-            contest.registration = registration ? registration : false;
+            contest.registration = req?.body?.registration ? req?.body?.registration : false;
         }
 
         await contest.save();
@@ -195,24 +197,24 @@ export const UpdateQuestion = AsyncHandler(async (req, res) => {
         }
 
         if ("question" in req.body) {
-            questionInfo.question = question;
+            questionInfo.question = req?.body?.question;
         }
         if ("type" in req.body) {
-            questionInfo.type = type;
+            questionInfo.type = req?.body?.type;
         }
         if ("marks" in req.body) {
-            questionInfo.marks = marks;
+            questionInfo.marks = req?.body?.marks;
         }
 
         if (type === "multiple") {
-            questionInfo.multipleQuestion = req.body.multipleQuestion;
-            questionInfo.multipleAnswer = req.body.multipleAnswer;
+            questionInfo.multipleQuestion = req?.body?.multipleQuestion;
+            questionInfo.multipleAnswer = req?.body?.multipleAnswer;
         } else {
-            questionInfo.singleAnswer = req.body.singleAnswer;
+            questionInfo.singleAnswer = req?.body?.singleAnswer;
         }
 
         if (type === "mcq") {
-            questionInfo.mcqOptions = req.body.options || req.body.mcqOptions;
+            questionInfo.mcqOptions = req?.body?.options || req?.body?.mcqOptions;
         }
 
         if ("questionImage" in req.file) {
