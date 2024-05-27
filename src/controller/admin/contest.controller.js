@@ -159,7 +159,7 @@ export const AddQuestion = AsyncHandler(async (req, res) => {
             data.mcqOptions = req.body.options || req.body.mcqOptions;
         }
 
-        if ("questionImage" in req.file) {
+        if (req?.files && req.files.length > 0 && req?.files?.questionImage?.length > 0) {
             data.questionImage = path.join("uploads", path.basename(req?.file?.questionImage[0]?.path));
         }
 
