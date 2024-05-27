@@ -26,12 +26,20 @@ export const GetContestById = AsyncHandler(async (req, res) => {
             throw new ApiError(401, "Unauthorized");
         }
 
-        const contest = await Contest.findById(req.params.id)
-            .select("-participants -createdBy -updatedAt -__v -questions")
+        const findcontest = await Contest.findById(req.params.id)
+            .select("-createdBy -updatedAt -__v")
             .populate("registered", "name email userId");
 
-        if (!contest) {
+        if (!findcontest) {
             throw new ApiError(404, "Contest Not Found");
+        }
+
+        let contest
+
+        if (!findcontest.participants.contains(req.user._id)) {
+            contest = await Contest.findById(req.params.id).select("-questions -registered -participants -createdBy -updatedAt -__v");
+        } else {
+            contest = await Contest.findById(req.params.id).select("-createdBy -updatedAt -__v -participants");
         }
 
         return res.json(new ApiResponse(200, contest, "Contest Details"));
