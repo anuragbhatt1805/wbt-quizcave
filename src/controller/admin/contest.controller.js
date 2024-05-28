@@ -119,7 +119,7 @@ export const RemoveContest = AsyncHandler(async (req, res) => {
 
 export const AddQuestion = AsyncHandler(async (req, res) => {
     try {
-        console.log(req.body);
+        // console.log(req.body);
 
         if (!req.user) {
             throw new ApiError(401, "Unauthorized Access");
