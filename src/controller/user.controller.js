@@ -131,8 +131,8 @@ export const LoginUser = AsyncHandler(async (req, res) => {
                 role: user.role,
                 profilePic: user.profilePic,
                 studentId: user.studentId,
-                access_token: accessToken,
-                refresh_token: refreshToken
+                accessToken: accessToken,
+                refreshToken: refreshToken
             }, "User logged in successfully"));
     } catch (error) {
         throw new ApiError(400, error.message);
