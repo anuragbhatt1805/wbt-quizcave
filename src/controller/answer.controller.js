@@ -50,9 +50,9 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
 
         console.log(req.params);
         console.log("================================================");
-        contest.log(req?.body);
-        console.log("================================================");
         contest.log(req);
+        console.log("================================================");
+        contest.log(req?.body);
 
 
         const result = await Result.findOne({ _id: req.params.id, userId: req.user._id });
