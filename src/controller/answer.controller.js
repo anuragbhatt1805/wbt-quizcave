@@ -97,7 +97,7 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
         if (questionInfo.type === "multiple"){
             data.answer = answer;
         } else {
-            data.answer = [answer];
+            data.answer = answer;
         }
 
         console.log("==========================6");
