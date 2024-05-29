@@ -22,12 +22,12 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "All fields are required");
         }
 
-        // if (!req?.files?.profile || !req?.files?.resume) {
-        //     throw new ApiError(400, "Profile Picture and Resume are required");
-        // }
+        if (!req?.files?.profile || !req?.files?.resume) {
+            throw new ApiError(400, "Profile Picture and Resume are required");
+        }
 
-        // const profile = path.join('uploads', path.basename(req?.files?.profile[0]?.path));
-        // const resume = path.join('uploads', path.basename(req?.files?.resume[0]?.path));
+        const profile = path.join('uploads', path.basename(req?.files?.profile[0]?.path));
+        const resume = path.join('uploads', path.basename(req?.files?.resume[0]?.path));
 
         const existingUser = await User.findOne({$or: [
             {email}, {phone}, {studentId}
