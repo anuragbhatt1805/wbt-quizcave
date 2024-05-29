@@ -102,7 +102,7 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
 
         console.log("==========================6");
 
-        result.answers.push(data);
+        await result.answers.push(data);
         await result.save();
 
         console.log("==========================7");
