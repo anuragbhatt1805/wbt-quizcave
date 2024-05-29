@@ -76,6 +76,7 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
         console.log("==========================3");
 
         const questionInfo = contest.questions.find(q => q._id == question);
+        // const questionInfo = contest.questions.filter(q => q._id == question)[0];
 
         if (!questionInfo) {
             throw new ApiError(404, "Question not found");
@@ -103,6 +104,8 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
 
         result.answers.push(data);
         await result.save();
+
+        console.log("==========================7");
 
         return res.status(201).json(new ApiResponse(201, {}, "Answer Saved Successfully"));
     } catch (err) {
