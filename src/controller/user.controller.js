@@ -8,17 +8,16 @@ import path from "path";
 export const RegisterStudent = AsyncHandler(async (req, res) => {
     try {
 
-        console.log(req);
-        console.log("====================================1")
+        console.log(req.body);
         const {
             name, email, phone, password, dob, studentId,
-            currentAddress, permanentAddress, gender,
+            currAddress, permAddress, gender,
             fatherName, motherName, currentSemester, branch,
             course, college, cgpa, backlog
         } = req.body;
 
         if (!name || !email || !phone || !password || !dob || !studentId ||
-            !currentAddress || !permanentAddress || !gender || !fatherName || !motherName ||
+            !currAddress || !permAddress || !gender || !fatherName || !motherName ||
             !currentSemester || !branch || !course || !college || !cgpa || !backlog) {
             throw new ApiError(400, "All fields are required");
         }
@@ -27,25 +26,19 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "Profile Picture and Resume are required");
         }
 
-        console.log("====================================2")
-
         const profile = path.join('uploads', path.basename(req?.files?.profile[0]?.path));
         const resume = path.join('uploads', path.basename(req?.files?.resume[0]?.path));
-
-        console.log("====================================3")
 
         const existingUser = await User.findOne({$or: [
             {email}, {phone}, {studentId}
         ]});
 
-        console.log("====================================4")
-
         if (existingUser) {
             throw new ApiError(400, "User already exists");
         }
 
-        currentAddress = JSON.parse(currentAddress);
-        permanentAddress = JSON.parse(permanentAddress);
+        const currentAddress = JSON.parse(JSON.parse(currAddress));
+        const permanentAddress = JSON.parse(JSON.parse(permAddress));
 
         const newUser = await User.create({
             name: name.trim(),
@@ -85,8 +78,6 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
             resume: resume
         })
 
-        console.log("====================================5")
-
         if (!newUser) {
             throw new ApiError(400, "Failed to register user");
         }
@@ -95,14 +86,11 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
 
         const newUserInfo = await User.findById(newUser._id).select("-password -_id -__v");
 
-        console.log("====================================6")
 
         const option = {
             httpOnly: true,
             secure: true,
         }
-
-        console.log("====================================7")
 
         return res.status(201)
             .cookie("accessToken", accessToken, option)
