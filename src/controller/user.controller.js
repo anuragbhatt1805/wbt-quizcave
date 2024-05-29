@@ -44,6 +44,9 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "User already exists");
         }
 
+        currentAddress = JSON.parse(currentAddress);
+        permanentAddress = JSON.parse(permanentAddress);
+
         const newUser = await User.create({
             name: name.trim(),
             email: email.trim(),
