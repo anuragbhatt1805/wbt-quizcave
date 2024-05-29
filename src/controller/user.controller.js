@@ -97,6 +97,7 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
             .cookie("refreshToken", refreshToken, option)
             .json(new ApiResponse(201, newUserInfo, "User registered successfully"));
     } catch (error) {
+        console.log(error);
         throw new ApiError(400, error.message);
     }
 })
