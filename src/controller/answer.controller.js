@@ -48,25 +48,36 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
             throw new ApiError(401, "Unauthorized");
         }
 
+        console.log(req.params);
+        contest.log(re.body);
+
         const result = await Result.findOne({ _id: req.params.id, userId: req.user._id });
 
         if (!result) {
             throw new ApiError(404, "Result not found");
         }
 
+        console.log("==========================1");
+
         if (result.sumbittedOn !== undefined) {
             throw new ApiError(400, "Result Already Submitted");
         }
 
+        console.log("==========================2");
+
         const {question, answer} = req.body;
 
         const contest = await Contest.findById(result.contestId);
+
+        console.log("==========================3");
 
         const questionInfo = contest.questions.find(q => q._id == question);
 
         if (!questionInfo) {
             throw new ApiError(404, "Question not found");
         }
+
+        console.log("==========================4");
 
         const data = {
             questionId: question,
@@ -76,11 +87,15 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "Question Already Answered");
         }
 
+        console.log("==========================5");
+
         if (questionInfo.type === "multiple"){
             data.answer = answer;
         } else {
             data.answer = [answer];
         }
+
+        console.log("==========================6");
 
         result.answers.push(data);
         await result.save();
