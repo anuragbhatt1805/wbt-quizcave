@@ -36,7 +36,7 @@ export const GetContestById = AsyncHandler(async (req, res) => {
 
         let contest
 
-        if (!findcontest.participants.contains(req.user._id)) {
+        if (!(req.user._id in findcontest.participants)) {
             contest = await Contest.findById(req.params.id).select("-questions -registered -participants -createdBy -updatedAt -__v");
         } else {
             contest = await Contest.findById(req.params.id).select("-createdBy -updatedAt -__v -participants");
