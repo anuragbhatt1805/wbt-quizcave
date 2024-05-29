@@ -22,12 +22,12 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "All fields are required");
         }
 
-        if (!req?.files?.profile || !req?.files?.resume) {
-            throw new ApiError(400, "Profile Picture and Resume are required");
-        }
+        // if (!req?.files?.profile || !req?.files?.resume) {
+        //     throw new ApiError(400, "Profile Picture and Resume are required");
+        // }
 
-        const profile = path.join('uploads', path.basename(req?.files?.profile[0]?.path));
-        const resume = path.join('uploads', path.basename(req?.files?.resume[0]?.path));
+        // const profile = path.join('uploads', path.basename(req?.files?.profile[0]?.path));
+        // const resume = path.join('uploads', path.basename(req?.files?.resume[0]?.path));
 
         const existingUser = await User.findOne({$or: [
             {email}, {phone}, {studentId}
@@ -47,7 +47,7 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
             password: password.trim(),
             userId: `WBT-${studentId.trim()}`,
             role: "student",
-            profilePic: profile,
+            profilePic: profile ? profile.profile : "",
             dob: dob.trim(),
             studentId: studentId.trim(),
             currAddress: {
@@ -75,7 +75,7 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
             college: college.trim(),
             cgpa: Number(cgpa),
             backlog: Number(backlog),
-            resume: resume
+            resume: resume ? resume.trim() : ""
         })
 
         if (!newUser) {
