@@ -49,7 +49,11 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
         }
 
         console.log(req.params);
-        contest.log(req.body);
+        console.log("================================================");
+        contest.log(req?.body);
+        console.log("================================================");
+        contest.log(req);
+
 
         const result = await Result.findOne({ _id: req.params.id, userId: req.user._id });
 
