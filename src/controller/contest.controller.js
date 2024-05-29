@@ -147,10 +147,11 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
             contestId: contest._id,
             userId: req.user._id,
         });
+        const newResult = await Result.findById(result._id).select("-updatedAt -__v").populate("userId", "name email userId");
 
         return res.json(new ApiResponse(200, {
             contest: contest,
-            result: result
+            result: newResult
         }, "Contest Started"));
     } catch(err) {
         throw new ApiError(500, err.message);
