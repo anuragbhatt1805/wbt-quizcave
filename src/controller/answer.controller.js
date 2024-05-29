@@ -109,6 +109,7 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
 
         return res.status(201).json(new ApiResponse(201, {}, "Answer Saved Successfully"));
     } catch (err) {
+        console.log(err)
         throw new ApiError(500, err.message);
     }
 });
