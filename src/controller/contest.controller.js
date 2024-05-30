@@ -14,7 +14,7 @@ export const GetAllContests = AsyncHandler(async (req, res) => {
             active: true,
             endDate: { $gt: new Date().toLocaleString() },
             declared: false,
-            participants: { $nin: [req.user._id] } // Filter out contests where req.user._id is not present in participants
+            participants: { $in: [req.user._id] } // Filter out contests where req.user._id is not present in participants
         })
             .select("-questions -registered -participants -createdBy -updatedAt -__v")
             .sort({ startDate: -1 });
