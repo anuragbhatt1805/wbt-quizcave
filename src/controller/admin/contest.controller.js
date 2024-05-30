@@ -15,10 +15,10 @@ export const CreateContest = AsyncHandler(async (req, res) => {
         }
 
         const {
-            name, description, duration, rules, startDate, endDate, active
+            name, description, duration, rules, startDate, endDate, active, passingMarks,
         } = req.body;
 
-        if (!name || !description || !duration || !rules || !startDate || !endDate) {
+        if (!name || !description || !duration || !rules || !startDate || !endDate || !passingMarks) {
             throw new ApiError(400, "All fields are required");
         }
 
@@ -30,7 +30,8 @@ export const CreateContest = AsyncHandler(async (req, res) => {
             startDate: new Date(startDate),
             endDate: new Date(endDate),
             createdBy: req.user._id,
-            active: active ? active : false
+            active: active ? active : false,
+            passingMarks: Number.parseInt(passingMarks.trim()),
         })
 
         if (!newContest) {
