@@ -166,6 +166,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
             result: newResult
         }, "Contest Started"));
     } catch(err) {
+        console.log(err);
         throw new ApiError(500, err.message);
     }
 });
