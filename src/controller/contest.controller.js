@@ -122,13 +122,25 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "Contest Not Active");
         }
 
+        
+        if (!contest.registration) {
+            throw new ApiError(400, "Registration Closed");
+        }
+
+        if (contest.registered.includes(req.user._id)) {
+            throw new ApiError(400, "Already Registered");
+        }
+
+        contest.registered.push(req.user._id);
+        await contest.save();
+
         if (contest.startDate > new Date()) {
             throw new ApiError(400, "Contest Not Started Yet");
         }
 
-        if (!contest.registered.includes(req.user._id)) {
-            throw new ApiError(400, "Not Registered for Contest");
-        }
+        // if (!contest.registered.includes(req.user._id)) {
+        //     throw new ApiError(400, "Not Registered for Contest");
+        // }
 
         if (contest.participants.includes(req.user._id)) {
             throw new ApiError(400, "Already Attempted");
