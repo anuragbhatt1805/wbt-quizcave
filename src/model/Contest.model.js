@@ -63,7 +63,7 @@ const ContestSchema = new mongoose.Schema({
     },
     registration: {
         type: Boolean,
-        default: false
+        default: true
     },
     registered: {
         type: [mongoose.Schema.Types.ObjectId],
