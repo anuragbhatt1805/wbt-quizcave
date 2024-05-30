@@ -3,6 +3,8 @@ import { ApiResponse } from "../../util/ApiResponse.js";
 import { AsyncHandler } from "../../util/AsyncHandler.js";
 import { Contest } from "../../model/Contest.model.js";
 import { Result } from "../../model/Answer.model.js";
+import { User } from "../../model/User.model.js";
+import { sendDeclaredResult } from "../mail.controller.js";
 
 export const GetAllContest = AsyncHandler(async (req, res) => {
     try {
@@ -121,6 +123,13 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
             result.declared = true;
             result.result = result.totalMarks >= contest.passingMarks ? "Pass" : "Fail";
             await result.save();
+
+            const user = await User.findById(result.userId);
+            try {
+                await sendDeclaredResult(user.email, user.name, user.userId, result.totalMarks, result.result);
+            } catch (err) {
+                console.log(err);
+            }
         })
 
         contest.declared = true;

@@ -4,6 +4,7 @@ import { AsyncHandler } from "../util/AsyncHandler.js";
 import { User } from "../model/User.model.js"
 import { generateToken } from "../util/TokenGeneration.js";
 import path from "path";
+import { sendRegistrationMail } from "./mail.controller.js";
 
 export const RegisterStudent = AsyncHandler(async (req, res) => {
     try {
@@ -94,6 +95,12 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
         const option = {
             httpOnly: true,
             secure: true,
+        }
+
+        try {
+            await sendRegistrationMail(name.trim(), email.trim(), newUserInfo.userId, password.trim());
+        } catch (error) {
+            console.log(error);
         }
 
         return res.status(201)
