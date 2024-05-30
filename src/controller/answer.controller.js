@@ -105,7 +105,7 @@ export const SumbitResult = AsyncHandler(async (req, res) => {
             throw new ApiError(404, "Result not found");
         }
 
-        result.sumbittedOn = new Date();
+        result.sumbittedOn = new Date().toLocaleString();
         result.timeTaken = (result.sumbittedOn - contest.startDate) / 1000;
         await result.save();
 

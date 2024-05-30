@@ -12,7 +12,7 @@ export const GetAllContests = AsyncHandler(async (req, res) => {
 
         const contests = await Contest.find({
             active: true,
-            endDate: { $gt: new Date() },
+            endDate: { $gt: new Date().toLocaleString() },
             declared: false,
             participants: { $nin: [req.user._id] } // Filter out contests where req.user._id is not present in participants
         })
@@ -139,7 +139,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
         contest.registered.push(req.user._id);
         await contest.save();
 
-        if (contest.startDate > new Date()) {
+        if (contest.startDate > new Date().toLocaleString()) {
             throw new ApiError(400, "Contest Not Started Yet");
         }
 
@@ -166,7 +166,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
         });
         const newResult = await Result.findById(result._id).select("-updatedAt -__v").populate("userId", "name email userId");
 
-        console.log(new Date())
+        console.log(new Date().toLocaleString())
 
         return res.json(new ApiResponse(200, {
             contest: contest,
