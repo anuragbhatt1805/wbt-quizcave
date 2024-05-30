@@ -94,7 +94,7 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
             throw new ApiError(404, "No Results Found");
         }
 
-        if (!results.declared){
+        if (results.declared){
             throw new ApiError(400, "Results Already Declared");
         }
 
