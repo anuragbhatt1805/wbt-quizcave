@@ -134,7 +134,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
         contest.registered.push(req.user._id);
         await contest.save();
 
-        if (contest.startDate > new Date().toLocaleString()) {
+        if (contest.startDate > new Date()) {
             throw new ApiError(400, "Contest Not Started Yet");
         }
 
@@ -161,7 +161,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
         });
         const newResult = await Result.findById(result._id).select("-updatedAt -__v").populate("userId", "name email userId");
 
-        console.log(new Date().toLocaleString())
+        console.log(new Date())
 
         return res.json(new ApiResponse(200, {
             contest: contest,

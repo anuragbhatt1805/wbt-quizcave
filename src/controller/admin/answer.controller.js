@@ -22,9 +22,9 @@ export const GetAllContest = AsyncHandler(async (req, res) => {
         }
 
         if (req?.query?.past === "true") {
-            data.endDate = {$lt: new Date().toLocaleString().toLocaleString()};
+            data.endDate = {$lt: new Date().toLocaleString()};
         } else {
-            data.endDate = {$gt: new Date().toLocaleString().toLocaleString()};
+            data.endDate = {$gt: new Date().toLocaleString()};
         }
 
         const contests = await Contest.find(data);
@@ -84,7 +84,7 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "Contest Not Active");
         }
 
-        if (contest.endDate > new Date().toLocaleString().toLocaleString()){
+        if (contest.endDate > new Date().toLocaleString()){
             throw new ApiError(400, "Contest Not Ended");
         }
 
