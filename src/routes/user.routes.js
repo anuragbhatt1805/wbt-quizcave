@@ -9,7 +9,8 @@ export const UserRouter = Router();
 
 UserRouter.post("/register", upload.fields([
     { name: "profile", maxCount: 1 },
-    { name: "resume", maxCount: 1}
+    { name: "resume", maxCount: 1},
+    { name: "marksheet", maxCount: 10}
 ]), RegisterStudent);
 
 UserRouter.post("/login", LoginUser);

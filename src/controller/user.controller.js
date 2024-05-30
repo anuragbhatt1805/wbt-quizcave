@@ -13,21 +13,22 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
             name, email, phone, password, dob, studentId,
             currAddress, permAddress, gender,
             fatherName, motherName, currentSemester, branch,
-            course, college, cgpa, backlog
+            course, college, cgpa, backlog, passingYear, altPhone
         } = req.body;
 
         if (!name || !email || !phone || !password || !dob || !studentId ||
             !currAddress || !permAddress || !gender || !fatherName || !motherName ||
-            !currentSemester || !branch || !course || !college || !cgpa || !backlog) {
+            !currentSemester || !branch || !course || !college || !cgpa || !backlog || !passingYear) {
             throw new ApiError(400, "All fields are required");
         }
 
-        if (!req?.files?.profile || !req?.files?.resume) {
-            throw new ApiError(400, "Profile Picture and Resume are required");
+        if (!req?.files?.profile || !req?.files?.resume || !req?.files?.marksheet) {
+            throw new ApiError(400, "Profile Picture, Resume and Marksheets are required");
         }
 
         const profile = path.join('uploads', path.basename(req?.files?.profile[0]?.path));
         const resume = path.join('uploads', path.basename(req?.files?.resume[0]?.path));
+        const marksheet = Array.from(req?.files?.marksheet).map(file => path.join('uploads', path.basename(file?.path)));
 
         const existingUser = await User.findOne({$or: [
             {email}, {phone}, {studentId}
@@ -47,7 +48,10 @@ export const RegisterStudent = AsyncHandler(async (req, res) => {
             password: password.trim(),
             userId: `WBT-${studentId.trim()}`,
             role: "student",
-            profilePic: profile ? profile.profile : "",
+            passingYear: Number(passingYear.trim()),
+            altPhone: altPhone ? altPhone.trim() : "",
+            profilePic: profile ? profile.trim() : "",
+            marksheet: marksheet,
             dob: dob.trim(),
             studentId: studentId.trim(),
             currAddress: {

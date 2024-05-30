@@ -44,6 +44,9 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    altPhone: {
+        type: String,
+    },
     userId: {
         type: String,
         required: true,
@@ -75,6 +78,10 @@ const UserSchema = new mongoose.Schema({
     },
     studentId: {
         type: String,
+    },
+    passingYear: {
+        type: Number,
+        required: true,
     },
     currAddress: {
         type: AddressSchema
@@ -112,6 +119,10 @@ const UserSchema = new mongoose.Schema({
     },
     resume: {
         type: String,
+    },
+    marksheet: {
+        type: [String],
+        default: []
     }
 }, {
     timestamps: true
