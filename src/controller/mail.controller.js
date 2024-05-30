@@ -1,4 +1,4 @@
-import { sendMail } from "../util/mail";
+import { sendMail } from "../util/mail.js";
 
 export const sendRegistrationMail= async (name, email, userId, password) => {
     const subject = "Registration Successful";
