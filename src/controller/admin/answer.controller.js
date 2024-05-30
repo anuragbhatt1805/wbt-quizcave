@@ -123,13 +123,6 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
             result.declared = true;
             result.result = result.totalMarks >= contest.passingMarks ? "Pass" : "Fail";
             await result.save();
-
-            const user = await User.findById(result.userId);
-            try {
-                await sendDeclaredResult(user.email, user.name, user.userId, result.totalMarks, result.result);
-            } catch (err) {
-                console.log(err);
-            }
         })
 
         contest.declared = true;
