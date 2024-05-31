@@ -34,3 +34,5 @@ const QuestionSchema = new mongoose.Schema({
         required: true
     }
 });
+
+const Question = mongoose.model('Question', QuestionSchema);
