@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const AnswerSchema = new mongoose.Schema({
     questionId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Contest.questions',
+        ref: 'Question',
         required: true
     },
     answer: {

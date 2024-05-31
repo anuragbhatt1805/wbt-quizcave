@@ -1,35 +1,5 @@
 import mongoose from "mongoose";
 
-const QuestionSchema = new mongoose.Schema({
-    question: {
-        type: String,
-        required: true
-    },
-    questionImage: {
-        type: String
-    },
-    type: {
-        type: String,
-        required: true,
-        enum: ['mcq', 'short', 'long', 'numerical', 'multiple']
-    },
-    mcqOptions: {
-        type: [String]
-    },
-    answer: {
-        type: String
-    },
-    multipleQuestion: {
-        type: [String]
-    },
-    multipleAnswer: {
-        type: [String]
-    },
-    marks: {
-        type: Number,
-        required: true
-    }
-});
 
 const ContestSchema = new mongoose.Schema({
     name: {
@@ -53,9 +23,6 @@ const ContestSchema = new mongoose.Schema({
     endDate: {
         type: Date,
         required: true
-    },
-    questions: {
-        type: [QuestionSchema]
     },
     active: {
         type: Boolean,
