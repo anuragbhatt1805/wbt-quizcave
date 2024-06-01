@@ -1,9 +1,15 @@
+import mongoose from 'mongoose';
 
 const QuestionSchema = new mongoose.Schema({
     set: {
         type: String,
         required: true,
         enum: ['A', 'B', 'C', 'D', 'E']
+    },
+    difficult: {
+        type: String,
+        required: true,
+        enum: ['easy', 'medium', 'hard']
     },
     question: {
         type: String,
@@ -33,6 +39,8 @@ const QuestionSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
+}, {
+    timestamps: true
 });
 
-const Question = mongoose.model('Question', QuestionSchema);
+export const Question = mongoose.model('Question', QuestionSchema);
