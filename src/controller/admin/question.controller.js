@@ -14,15 +14,20 @@ export const createQuestion = AsyncHandler(async (req, res) => {
             throw new ApiError(403, "Forbidden");
         }
 
-        const { set, difficult, question, type, marks } = req.body;
+        const { set, difficult, question, type } = req.body;
 
-        if (!set || !difficult || !question || !type || !marks) {
+        if (!set || !difficult || !question || !type) {
             throw new ApiError(400, "All fields are required");
         }
 
         const questionImage = req?.files?.questionImage ? req.files.questionImage[0].filename : "";
 
-        const data = {};
+        const data = {
+            set: set.trim().toUpperCase(),
+            difficult: difficult.trim().toLowerCase(),
+            question: question.trim(),
+            type: type.trim().toLowerCase(),
+        };
 
         if (questionImage.trim() !== "") {
             data.questionImage = path.join("uploads", path.basename(req?.files?.questionImage[0]?.path));
