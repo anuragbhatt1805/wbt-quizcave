@@ -83,7 +83,7 @@ export const getQuestions = AsyncHandler(async (req, res) => {
         }
 
         const page = parseInt(req?.query?.p) || 0;
-        const limit = parseInt(req?.query?.l) || 10;
+        const limit = parseInt(req?.query?.l) || 100;
 
         const data = {};
 
