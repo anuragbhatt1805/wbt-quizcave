@@ -10,7 +10,7 @@ export const GetAllContests = AsyncHandler(async (req, res) => {
             throw new ApiError(401, "Unauthorized");
         }
 
-        const set = (req.user.branch && ['BE/BTECH' ,'BCA', 'MTECH', 'DIPLOMA'].includes(req.user.branch)) ? "A" : "B";
+        const set = (req.user.course && ['BE/BTECH' ,'BCA', 'MTECH', 'DIPLOMA'].includes(req.user.course)) ? "A" : "B";
 
         const contests = await Contest.find({active: true, endDate: {$gt: new Date()}, declared: false, set: set})
             .select("-questions -registered -participants -createdBy -updatedAt -__v")
@@ -57,7 +57,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
         }
 
 
-        const set = (req.user.branch && ['BE/BTECH' ,'BCA', 'MTECH', 'DIPLOMA'].includes(req.user.branch)) ? "A" : "B";
+        const set = (req.user.course && ['BE/BTECH' ,'BCA', 'MTECH', 'DIPLOMA'].includes(req.user.course)) ? "A" : "B";
 
         const contest = await Contest.findOne({_id: req.params.id, active: true, set: set, endDate: {$gt: new Date()}});
 
