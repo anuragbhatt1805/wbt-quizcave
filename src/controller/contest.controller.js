@@ -89,6 +89,8 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
             userId: req.user._id
         });
 
+        const fetchResult = await Result.findById(newResult._id).populate("-contestId -userId");
+
         contest.participants.push(req.user._id);
         await contest.save();
 
@@ -106,6 +108,8 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
               }
             }      
           ]);
+
+        console.log(questionsEasy)
 
         const questionsMedium = await Contest.aggregate([
             { $match: { set: set, difficult: "medium" } },
@@ -143,7 +147,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
             200, {
                 contest: contest,
                 questions: allQuestions,
-                result: newResult
+                result: fetchResult
             }, "Contest Started Successfully"
         ))
 
