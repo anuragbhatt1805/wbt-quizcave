@@ -72,9 +72,7 @@ export const GetResultsForContest = AsyncHandler(async (req, res) => {
     const results = await Result.find({
       contestId: contest._id,
       declared: true,
-    })
-      .populate("userId")
-      .select("-answers");
+    }).populate("userId").select("-answers").sort({ totalMarks: -1, sumbittedOn: 1});
 
     if (!results) {
       throw new ApiError(404, "No Results Found");
