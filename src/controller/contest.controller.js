@@ -18,6 +18,7 @@ export const GetAllContests = AsyncHandler(async (req, res) => {
 
         return res.json(new ApiResponse(200, contests, "Currently Available Contests Listed"));
     } catch(err) {
+        console.log(err);
         throw new ApiError(500, err.message);
     }
 });
