@@ -15,23 +15,22 @@ export const CreateContest = AsyncHandler(async (req, res) => {
         }
 
         const {
-            name, description, duration, rules, startDate, endDate, active, passingMarks,
+            name, duration, rules, startDate, endDate, active, set
         } = req.body;
 
-        if (!name || !description || !duration || !rules || !startDate || !endDate || !passingMarks) {
+        if (!name || !duration || !rules || !startDate || !endDate || set) {
             throw new ApiError(400, "All fields are required");
         }
 
         const newContest = await Contest.create({
             name: name.trim(),
-            description: description,
             duration: Number(duration),
             rules: rules,
             startDate: new Date(startDate),
             endDate: new Date(endDate),
             createdBy: req.user._id,
             active: active ? active : false,
-            passingMarks: Number.parseInt(passingMarks.trim()),
+            set: set.trim().toUpperCase()
         })
 
         if (!newContest) {
@@ -39,58 +38,6 @@ export const CreateContest = AsyncHandler(async (req, res) => {
         }
 
         return res.status(201).json(new ApiResponse(201, newContest, "Contest created successfully"));
-    } catch (error) {
-        throw new ApiError(400, error.message);
-    }
-});
-
-export const UpdateContest = AsyncHandler(async (req, res) => {
-    try {
-        if (!req.user) {
-            throw new ApiError(401, "Unauthorized Access");
-        }
-
-        if (req.user.role !== "admin") {
-            throw new ApiError(401, "Unauthorized Access");
-        }
-
-        const contest = await Contest.findById(req.params.id);
-
-        if (!contest) {
-            throw new ApiError(404, "Contest not found");
-        }
-
-        if ("name" in req.body) {
-            contest.name = req?.body?.name.trim();
-        }
-        if ("description" in req.body) {
-            contest.description = req?.body?.description;
-        }
-        if ("duration" in req.body) {
-            contest.duration = Number(req?.body?.duration);
-        }
-        if ("rules" in req.body) {
-            contest.rules = req?.body?.rules;
-        }
-        if ("startDate" in req.body) {
-            contest.startDate = new Date(req?.body?.startDate);
-        }
-        if ("endDate" in req.body) {
-            contest.endDate = new Date(req?.body?.endDate);
-        }
-        if ("active" in req.body) {
-            contest.active = req?.body?.active ? req?.body?.active : false;
-        }
-        if ("passingMarks" in req.body) {
-            contest.passingMarks = Number(req?.body?.passingMarks);
-        }
-        if ("registration" in req.body) {
-            contest.registration = req?.body?.registration ? req?.body?.registration : false;
-        }
-
-        await contest.save();
-
-        return res.status(200).json(new ApiResponse(200, contest, "Contest updated successfully"));
     } catch (error) {
         throw new ApiError(400, error.message);
     }
@@ -113,184 +60,6 @@ export const RemoveContest = AsyncHandler(async (req, res) => {
         }
 
         return res.status(200).json(new ApiResponse(200, contest, "Contest removed successfully"));
-    } catch (error) {
-        throw new ApiError(400, error.message);
-    }
-});
-
-export const AddQuestion = AsyncHandler(async (req, res) => {
-    try {
-        // console.log(req.body);
-
-        if (!req.user) {
-            throw new ApiError(401, "Unauthorized Access");
-        }
-
-        if (req.user.role !== "admin") {
-            throw new ApiError(401, "Unauthorized Access");
-        }
-
-        const contest = await Contest.findById(req.params.id);
-
-        if (!contest) {
-            throw new ApiError(404, "Contest not found");
-        }
-
-        const {
-            question, type, marks
-        } = req.body;
-
-        if (!question || !type || !marks) {
-            throw new ApiError(400, "All fields are required");
-        }
-
-        const data = {
-            question: question,
-            type: type,
-            marks: marks,
-        }
-
-        if (type === "multiple") {
-            let multiQuestion = req.body.multipleQuestion;
-            if (typeof multiQuestion === "string") {
-                multiQuestion = multiQuestion.split(",").map((question) => question.trim());
-            }
-            data.multipleQuestion = multiQuestion;
-
-            let multiAnswer = req.body.multipleAnswer;
-            if (typeof multiAnswer === "string") {
-                multiAnswer = multiAnswer.split(",").map((answer) => answer.trim());
-            }
-            data.multipleAnswer = multiAnswer;
-        } else {
-            data.answer = req.body.singleAnswer;
-        }
-
-        if (type === "mcq") {
-            let options = req.body.options;
-            if (typeof options === "string") {
-                options = options.split(",").map((option) => option.trim());
-            }
-            data.mcqOptions = options;
-        }
-
-        if (req?.files && req.files.length > 0 && req?.files?.questionImage?.length > 0) {
-            data.questionImage = path.join("uploads", path.basename(req?.file?.questionImage[0]?.path));
-        }
-
-        contest.questions.push(data);
-        await contest.save();
-
-        const addedQuestion = contest.questions[contest.questions.length - 1];
-
-        return res.status(201).json(new ApiResponse(201, addedQuestion, "Question added successfully"));
-    } catch (error) {
-        throw new ApiError(400, error.message);
-    }
-});
-
-export const UpdateQuestion = AsyncHandler(async (req, res) => {
-    try {
-        if (!req.user) {
-            throw new ApiError(401, "Unauthorized Access");
-        }
-
-        if (req.user.role !== "admin") {
-            throw new ApiError(401, "Unauthorized Access");
-        }
-
-        const contest = await Contest.findById(req.params.id);
-
-        if (!contest) {
-            throw new ApiError(404, "Contest not found");
-        }
-
-        const questionInfo = contest.questions.id(req.params.questionId);
-
-        if (!questionInfo) {
-            throw new ApiError(404, "Question not found");
-        }
-
-        if ("question" in req.body) {
-            questionInfo.question = req?.body?.question;
-        }
-        if ("type" in req.body) {
-            questionInfo.type = req?.body?.type;
-        }
-        if ("marks" in req.body) {
-            questionInfo.marks = req?.body?.marks;
-        }
-
-        if (type === "multiple") {
-            let multiQuestion = req.body.multipleQuestion;
-            if (typeof multiQuestion === "string") {
-                multiQuestion = multiQuestion.split(",").map((question) => question.trim());
-            }
-            questionInfo.multipleQuestion = multiQuestion;
-            let multiAnswer = req.body.multipleAnswer;
-            if (typeof multiAnswer === "string") {
-                multiAnswer = multiAnswer.split(",").map((answer) => answer.trim());
-            }
-            questionInfo.multipleAnswer = multiAnswer;
-        } else {
-            questionInfo.singleAnswer = req?.body?.singleAnswer;
-        }
-
-        if (type === "mcq") {
-            let options = req.body.options;
-            if (typeof options === "string") {
-                options = options.split(",").map((option) => option.trim());
-            }
-            questionInfo.mcqOptions = options;
-        }
-
-        if ("questionImage" in req.file) {
-            if (questionInfo.questionImage) {
-                const imagePath = path.join("public", question.questionImage);
-                await fs.unlinkSync(imagePath);
-            }
-            questionInfo.questionImage = path.join("uploads", path.basename(req?.file?.questionImage[0]?.path));
-        }
-
-        await contest.save();
-
-        return res.status(200).json(new ApiResponse(200, question, "Question updated successfully"));
-    } catch (error) {
-        throw new ApiError(400, error.message);
-    }
-});
-
-export const RemoveQuestion = AsyncHandler(async (req, res) => {
-    try {
-        if (!req.user) {
-            throw new ApiError(401, "Unauthorized Access");
-        }
-
-        if (req.user.role !== "admin") {
-            throw new ApiError(401, "Unauthorized Access");
-        }
-
-        const contest = await Contest.findById(req.params.id);
-
-        if (!contest) {
-            throw new ApiError(404, "Contest not found");
-        }
-
-        const question = contest.questions.id(req.params.questionId);
-
-        if (!question) {
-            throw new ApiError(404, "Question not found");
-        }
-
-        if (question.questionImage) {
-            const imagePath = path.join("public", question.questionImage);
-            await fs.unlinkSync(imagePath);
-        }
-
-        contest.questions.splice(contest.questions.indexOf(question), 1);
-        await contest.save();
-
-        return res.status(200).json(new ApiResponse(200, contest.questions, "Question removed successfully"));
     } catch (error) {
         throw new ApiError(400, error.message);
     }

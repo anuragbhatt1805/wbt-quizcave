@@ -6,9 +6,6 @@ const ContestSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: {
-        type: String
-    },
     duration:{
         type: Number,
         required: true
@@ -32,10 +29,6 @@ const ContestSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    registered: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'User'
-    },
     participants: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'User'
@@ -48,8 +41,10 @@ const ContestSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    passingMarks: {
-        type: Number
+    set: {
+        type: String,
+        required: true,
+        enum: ['A', 'B', 'C', 'D', 'E']
     }
 }, {
     timestamps: true

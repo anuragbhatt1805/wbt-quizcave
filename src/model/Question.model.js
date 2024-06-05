@@ -34,10 +34,6 @@ const QuestionSchema = new mongoose.Schema({
     },
     multipleAnswer: {
         type: [String]
-    },
-    marks: {
-        type: Number,
-        required: true
     }
 }, {
     timestamps: true

@@ -172,46 +172,22 @@ export const updateQuestion = AsyncHandler(async (req, res) => {
             throw new ApiError(404, "Question not found");
         }
 
-        const { set, difficult, question, type, marks } = req.body;
+        const { set, difficult, question } = req.body;
 
-        if (!set || !difficult || !question || !type || !marks) {
+        if (!set || !difficult || !question) {
             throw new ApiError(400, "All fields are required");
         }
 
         const questionImage = req?.files?.questionImage ? req.files.questionImage[0].filename : "";
 
-        const data = {};
+        const data = {
+            set: set.trim().toUpperCase(),
+            difficult: difficult.trim().toLowerCase(),
+            question: question.trim(),
+        };
 
         if (questionImage.trim() !== "") {
             data.questionImage = path.join("uploads", path.basename(req?.files?.questionImage[0]?.path));
-        }
-
-        if (type === "mcq") {
-            const { mcqOptions, answer } = req.body;
-
-            if (!mcqOptions || !answer) {
-                throw new ApiError(400, "All fields are required");
-            }
-
-            data.mcqOptions = mcqOptions;
-            data.answer = answer;
-        } else if (type === "multiple") {
-            const { multipleQuestion, multipleAnswer } = req.body;
-
-            if (!multipleQuestion || !multipleAnswer) {
-                throw new ApiError(400, "All fields are required");
-            }
-
-            data.multipleQuestion = multipleQuestion;
-            data.multipleAnswer = multipleAnswer;
-        } else {
-            const { answer } = req.body;
-
-            if (!answer) {
-                throw new ApiError(400, "All fields are required");
-            }
-
-            data.answer = answer;
         }
 
         const updatedQuestion = await Question.findByIdAndUpdate(req.params.id, data, { new: true });

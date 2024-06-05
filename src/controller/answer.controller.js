@@ -3,6 +3,7 @@ import { ApiResponse } from "../util/ApiResponse.js";
 import { AsyncHandler } from "../util/AsyncHandler.js";
 import { Result } from "../model/Answer.model.js";
 import { Contest } from "../model/Contest.model.js";
+import { Question } from "../model/Question.model.js";
 
 export const GetAllDeclaredResult = AsyncHandler(async (req, res) => {
     try {
@@ -60,9 +61,7 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
 
         const {question, answer} = req.body;
 
-        const contest = await Contest.findById(result.contestId);
-
-        const questionInfo = contest.questions.find(q => q._id == question);
+        const questionInfo = await Question.findOne({ _id: question })
 
         if (!questionInfo) {
             throw new ApiError(404, "Question not found");
@@ -70,16 +69,11 @@ export const AddAnswerInResult = AsyncHandler(async (req, res) => {
 
         const data = {
             questionId: question,
+            answer: answer
         };
 
         if (result.answers.find(a => a.questionId == question)) {
             throw new ApiError(400, "Question Already Answered");
-        }
-
-        if (questionInfo.type === "multiple"){
-            data.answer = answer;
-        } else {
-            data.answer = answer;
         }
 
         await result.answers.push(data);
