@@ -5,6 +5,7 @@ import { Contest } from "../../model/Contest.model.js";
 import { Result } from "../../model/Answer.model.js";
 import { User } from "../../model/User.model.js";
 import { sendDeclaredResult } from "../mail.controller.js";
+import { Question } from "../../model/Question.model.js";
 
 export const GetAllContest = AsyncHandler(async (req, res) => {
     try {
@@ -100,8 +101,8 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
 
         results.forEach(async (result) => {
             let total = 0;
-            result.answers.forEach(answer => {
-                const question = contest.questions.id(answer.questionId);
+            result.answers.forEach(async (answer) => {
+                const question = await Question.findById(answer.questionId);
                 if (question.type === "multiple"){
                     let res = true;
                     question.multipleAnswer.forEach((ans, index) => {
@@ -112,16 +113,21 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
                     if (res){
                         total += question.marks;
                     }
+                    // else {
+                    //     total -= question.marks;
+                    // }
                 } else {
                     if (question.answer === answer.answer[0]){
                         total += question.marks;
                     }
+                    // else {
+                    //     totl -= question.marks;
+                    // }
                 }
                 answer.marks = question.marks;
             });
             result.totalMarks = total;
             result.declared = true;
-            result.result = result.totalMarks >= contest.passingMarks ? "Pass" : "Fail";
             await result.save();
         })
 
