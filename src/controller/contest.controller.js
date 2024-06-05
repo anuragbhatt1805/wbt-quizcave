@@ -30,8 +30,7 @@ export const GetContestById = AsyncHandler(async (req, res) => {
         }
 
         const findcontest = await Contest.findById(req.params.id)
-            .select("-createdBy -updatedAt -__v")
-            .populate("registered", "name email userId");
+            .select("-createdBy -updatedAt -__v");
 
         if (!findcontest) {
             throw new ApiError(404, "Contest Not Found");
