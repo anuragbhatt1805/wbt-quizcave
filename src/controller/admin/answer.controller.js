@@ -72,6 +72,7 @@ export const GetResultsForContest = AsyncHandler(async (req, res) => {
 
         return res.json(new ApiResponse(200, results, "Results Listed"));
     } catch (err) {
+        console.log(err);
         throw new ApiError(500, err.message);
     }
 });
