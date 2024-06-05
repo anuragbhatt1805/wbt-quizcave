@@ -89,7 +89,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
             userId: req.user._id
         });
 
-        const fetchResult = await Result.findById(newResult._id).populate("-contestId -userId");
+        const fetchResult = await Result.findById(newResult._id).populate("-userId");
 
         contest.participants.push(req.user._id);
         await contest.save();
