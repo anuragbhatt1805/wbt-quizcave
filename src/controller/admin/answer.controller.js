@@ -39,6 +39,10 @@ export const GetAllContest = AsyncHandler(async (req, res) => {
             return { ...contest.toObject(), unEvaluated: temp };
         });
 
+        for (let i = 0; i < results.length; i++){
+            results[i] = await results[i];
+        }
+
         return res.json(new ApiResponse(200, results, "All Contests Listed"));
     } catch (err) {
         console.log(err);
