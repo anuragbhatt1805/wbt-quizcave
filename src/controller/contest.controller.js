@@ -39,7 +39,7 @@ export const GetContestById = AsyncHandler(async (req, res) => {
         let contest 
 
         if (!(req.user._id in findcontest.participants)) {
-            contest = await Contest.findById(req.params.id).select("-questions -registered -participants -createdBy -updatedAt -__v");
+            contest = await Contest.findById(req.params.id).select("-questions -participants -createdBy -updatedAt -__v");
         } else {
             contest = await Contest.findById(req.params.id).select("-createdBy -updatedAt -__v -participants");
         }
@@ -84,6 +84,9 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
             contestId: contest._id,
             userId: req.user._id
         });
+
+        contest.participants.push(req.user._id);
+        await contest.save();
 
         const set = (req.user.branch && ['BE/BTECH' ,'BCA', 'MTECH', 'DIPLOMA'].includes(req.user.branch)) ? "A" : "B";
 
