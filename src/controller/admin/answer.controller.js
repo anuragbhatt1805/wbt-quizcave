@@ -28,13 +28,20 @@ export const GetAllContest = AsyncHandler(async (req, res) => {
             data.endDate = {$gt: new Date().toLocaleString()};
         }
 
-        const contests = await Contest.find(data);
+        const contests = await Contest.find({...data});
 
         if (!contests){
             throw new ApiError(404, "No Contests Found");
         }
 
-        return res.json(new ApiResponse(200, contests, "All Contests Listed"));
+        const results = [...contests];
+
+        for (let i = 0; i < contests.length; i++) {
+            const temp = await Result.countDocuments({contestId: contests[i]._id, declared: false});
+            results[i].unEvaluated = temp;
+        }
+
+        return res.json(new ApiResponse(200, results, "All Contests Listed"));
     } catch (err) {
         throw new ApiError(500, err.message);
     }
