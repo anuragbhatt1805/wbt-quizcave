@@ -89,7 +89,7 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "Contest Not Ended");
         }
 
-        const results = await Result.find({contestId: contest._id});
+        const results = await Result.find({contestId: contest._id, declared: false});
 
         if (!results){
             throw new ApiError(404, "No Results Found");
