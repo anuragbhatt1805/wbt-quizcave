@@ -28,7 +28,7 @@ export const GetAllContest = AsyncHandler(async (req, res) => {
             data.endDate = {$gt: new Date().toLocaleString()};
         }
 
-        const contests = await Contest.find({...data});
+        const contests = await Contest.find({...data}).select("-rules -createdAt -updatedAt -duration");
 
         if (!contests){
             throw new ApiError(404, "No Contests Found");
