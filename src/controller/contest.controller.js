@@ -56,7 +56,10 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
             throw new ApiError(401, "Unauthorized");
         }
 
-        const contest = await Contest.findById(req.params.id);
+
+        const set = (req.user.branch && ['BE/BTECH' ,'BCA', 'MTECH', 'DIPLOMA'].includes(req.user.branch)) ? "A" : "B";
+
+        const contest = await Contest.findOne({_id: req.params.id, active: true, set: set, endDate: {$gt: new Date()}});
 
         if (!contest) {
             throw new ApiError(404, "Contest Not Found");
@@ -87,8 +90,6 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
 
         contest.participants.push(req.user._id);
         await contest.save();
-
-        const set = (req.user.branch && ['BE/BTECH' ,'BCA', 'MTECH', 'DIPLOMA'].includes(req.user.branch)) ? "A" : "B";
 
         const questionsEasy = await Contest.aggregate([
             { $match: { set: set, difficult: "easy" } },
