@@ -3,6 +3,7 @@ import { ApiResponse } from "../util/ApiResponse.js";
 import { AsyncHandler } from "../util/AsyncHandler.js";
 import { Contest } from "../model/Contest.model.js";
 import { Result } from "../model/Answer.model.js"
+import { Question } from "../model/Question.model.js";
 
 export const GetAllContests = AsyncHandler(async (req, res) => {
     try{
@@ -94,7 +95,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
         contest.participants.push(req.user._id);
         await contest.save();
 
-        const questionsEasy = await Contest.aggregate([
+        const questionsEasy = await Question.aggregate([
             { $match: { set: set, difficult: "easy" } },
             { $sample: { size: 10 } },
             { $project: {
@@ -111,7 +112,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
 
         console.log(questionsEasy)
 
-        const questionsMedium = await Contest.aggregate([
+        const questionsMedium = await Question.aggregate([
             { $match: { set: set, difficult: "medium" } },
             { $sample: { size: 10 } },
             { $project: {
@@ -126,7 +127,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
             }
           ]);
 
-        const questionsHard = await Contest.aggregate([
+        const questionsHard = await Question.aggregate([
             { $match: { set: set, difficult: "hard" } },
             { $sample: { size: 10 } },
             { $project: {
