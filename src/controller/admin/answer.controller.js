@@ -34,15 +34,14 @@ export const GetAllContest = AsyncHandler(async (req, res) => {
             throw new ApiError(404, "No Contests Found");
         }
 
-        const results = [...contests];
-
-        for (let i = 0; i < contests.length; i++) {
-            const temp = await Result.countDocuments({contestId: contests[i]._id, declared: false});
-            results[i].unEvaluated = temp;
-        }
+        const results = contests.map(async (contest) => {
+            const temp = await Result.countDocuments({ contestId: contest._id, declared: false });
+            return { ...contest.toObject(), unEvaluated: temp };
+        });
 
         return res.json(new ApiResponse(200, results, "All Contests Listed"));
     } catch (err) {
+        console.log(err);
         throw new ApiError(500, err.message);
     }
 });
