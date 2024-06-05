@@ -109,6 +109,12 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "Results Already Declared");
         }
 
+        const markingSchema = {
+            "easy":1,
+            "medium":3,
+            "hard":5
+        }
+
         results.forEach(async (result) => {
             let total = 0;
             result.answers.forEach(async (answer) => {
@@ -121,17 +127,17 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
                         }
                     });
                     if (res){
-                        total += question.marks;
+                        total += markingSchema[question.difficult];
                     }
                     // else {
-                    //     total -= question.marks;
+                    //     total -= markingSchema[question.difficult];
                     // }
                 } else {
                     if (question.answer === answer.answer[0]){
-                        total += question.marks;
+                        total += markingSchema[question.difficult];
                     }
                     // else {
-                    //     totl -= question.marks;
+                    //     totl -= markingSchema[question.difficult];
                     // }
                 }
                 answer.marks = question.marks;
