@@ -47,6 +47,7 @@ export const GetContestById = AsyncHandler(async (req, res) => {
 
         return res.json(new ApiResponse(200, contest, "Contest Details"));
     } catch(err) {
+        console.log(err);
         throw new ApiError(500, err.message);
     }
 });
