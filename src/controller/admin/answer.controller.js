@@ -23,9 +23,9 @@ export const GetAllContest = AsyncHandler(async (req, res) => {
         }
 
         if (req?.query?.past === "true") {
-            data.endDate = {$lt: new Date().toLocaleString()};
+            data.endDate = {$lt: new Date()};
         } else {
-            data.endDate = {$gt: new Date().toLocaleString()};
+            data.endDate = {$gt: new Date()};
         }
 
         const contests = await Contest.find({...data}).select("-rules -createdAt -updatedAt -duration");
