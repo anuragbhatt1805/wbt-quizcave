@@ -31,7 +31,7 @@ export const createQuestion = AsyncHandler(async (req, res) => {
             type: type.trim().toLowerCase(),
         };
 
-        if (questionImage.trim() !== "") {
+        if (questionImage !== undefined && questionImage.trim() !== "") {
             data.questionImage = path.join("uploads", path.basename(req?.files?.questionImage[0]?.path));
         }
 
