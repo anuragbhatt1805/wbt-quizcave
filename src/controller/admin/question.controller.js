@@ -22,7 +22,7 @@ export const createQuestion = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "All fields are required");
         }
 
-        const questionImage = req.files.questionImage[0].path;
+        const questionImage = req?.files?.questionImage[0]?.path;
 
         const data = {
             set: set.trim().toUpperCase(),
