@@ -2,6 +2,7 @@ import { ApiError } from "../../util/ApiError.js";
 import { ApiResponse } from "../../util/ApiResponse.js";
 import { AsyncHandler } from "../../util/AsyncHandler.js";
 import { Question } from "../../model/Question.model.js";
+import { writeFile } from "fs/promises";
 import path from "path";
 
 export const createQuestion = AsyncHandler(async (req, res) => {
@@ -22,7 +23,6 @@ export const createQuestion = AsyncHandler(async (req, res) => {
             throw new ApiError(400, "All fields are required");
         }
 
-        const questionImage = req?.files?.questionImage[0]?.path;
 
         const data = {
             set: set.trim().toUpperCase(),
@@ -31,9 +31,25 @@ export const createQuestion = AsyncHandler(async (req, res) => {
             type: type.trim().toLowerCase(),
         };
 
-        if (questionImage !== undefined && questionImage.trim() !== "") {
-            data.questionImage = path.join("uploads", path.basename(req?.files?.questionImage[0]?.path));
+        if (req?.body?.questionImage) {
+            const { questionImage } = req.body;
+
+            if (questionImage) {
+                const base64Data = questionImage.replace(/^data:image\/jpeg;base64,/, "");
+                const imageName = Date.now() + ".jpg";
+                const imagePath = path.join("uploads", imageName);
+                const savePath = path.join("home", "quizcave", "wbt-quizcave", "public")
+
+                writeFile(savePath, base64Data, "base64", function (err) {
+                    if (err) {
+                        throw new ApiError(500, "Failed to store image");
+                    }
+                });
+
+                data.questionImage = imagePath;
+            }
         }
+        // data.questionImage = path.join("uploads", path.basename(req?.files?.questionImage[0]?.path));
 
         if (type === "mcq") {
             const { mcqOptions, answer } = req.body;
