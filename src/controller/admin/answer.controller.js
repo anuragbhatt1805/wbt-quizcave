@@ -173,14 +173,11 @@ export const SendResult = AsyncHandler(async (req, res) => {
     if (!req.user) {
       throw new ApiError(401, "Unauthorized Access");
     }
-    if (!req.user.type === "admin") {
-      throw new ApiError(403, "Access Forbidden");
-    }
 
     const {resultList} = req.body;
 
     for (const result of resultList) {
-      const reslt = Result.findById(result.id).populate("userId").populate("contestId");
+      const reslt = Result.findById(result).populate("userId").populate("contestId");
 
       if (reslt.selected) {
         continue;

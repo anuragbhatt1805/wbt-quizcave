@@ -21,6 +21,8 @@ export function sendMail(recipient, subject, text, html) {
         text: text,
         html: html,
     };
+
+    console.log(mailOptions);
     
     // Send the email
     transporter.sendMail(mailOptions, (error, info) => {

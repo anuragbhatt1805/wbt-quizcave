@@ -2,7 +2,7 @@ import { sendMail } from "../util/mail.js";
 
 export const sendRegistrationMail= async (name, email, userId, password) => {
     const subject = "Registration Successful - Careers @ Whiteboard Technologies Pvt. Ltd";
-    // const text = `Dear ${name},\n\nYour registration was successful. Your user ID is ${userId} and password is ${password}.`;
+    const text = `Dear ${name},\n\nYour registration was successful. Your user ID is ${userId} and password is ${password}.`;
     const html = `<html lang='en'>
   <head>
     <meta charset='UTF-8' />
@@ -61,7 +61,7 @@ export const sendRegistrationMail= async (name, email, userId, password) => {
 
 export const sendDeclaredResult = async (email, name, date) => {
     const subject = "Result Declared - Careers @ Whiteboard Technologies Pvt. Ltd";
-    // const text = `Dear ${name} [${userId}],\n\nYour result has been declared. You scored ${marks} marks and your result is ${result}.`;
+    const text = `Dear ${name} [${userId}],\n\nYour result has been declared.`;
     const html = `<html lang="en">
   <head>
     <meta charset="UTF-8" />
