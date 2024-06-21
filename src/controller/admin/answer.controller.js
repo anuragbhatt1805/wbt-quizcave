@@ -180,8 +180,7 @@ export const SendResult = AsyncHandler(async (req, res) => {
     const {resultList} = req.body;
 
     for (const result of resultList) {
-      const res = Result.findById(result.id).populate("userId");
-      const user = await User.findById(res.userId);
+      const res = Result.findById(result.id).populate("userId").populate("contestId");
 
       if (res.selected) {
         continue;
@@ -190,7 +189,7 @@ export const SendResult = AsyncHandler(async (req, res) => {
         await res.save();
       }
 
-      await sendDeclaredResult(user.email, user.name, user.userId, res.totalMarks, "Selected");
+      await sendDeclaredResult(res?.userId?.email, res?.userId?.name, res.sumbittedOn);
     }
 
     return res.json(new ApiResponse(200, {}, "Result Sent"));
