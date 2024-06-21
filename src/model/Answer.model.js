@@ -44,6 +44,9 @@ const ResultSchema = new mongoose.Schema({
     },
     result: {
         type: String
+    },
+    selected: {
+        type: Boolean
     }
 });
 

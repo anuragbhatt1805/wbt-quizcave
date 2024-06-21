@@ -183,6 +183,13 @@ export const SendResult = AsyncHandler(async (req, res) => {
       const res = Result.findById(result.id).populate("userId");
       const user = await User.findById(res.userId);
 
+      if (res.selected) {
+        continue;
+      } else {
+        res.selected = true;
+        await res.save();
+      }
+
       await sendDeclaredResult(user.email, user.name, user.userId, res.totalMarks, "Selected");
     }
 
