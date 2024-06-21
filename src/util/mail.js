@@ -1,4 +1,6 @@
 import nodemailer from 'nodemailer';
+import hbs from 'nodemailer-express-handlebars';
+// import path from 'path';
 
 // Create a transporter using SMTP server information from process.env
 const transporter = nodemailer.createTransport({
@@ -10,6 +12,19 @@ const transporter = nodemailer.createTransport({
         pass: process.env.SMTP_PASSWORD,
     },
 });
+
+const handleBarOptions = {
+    viewEngine: {
+        extName: '.handlebars',
+        partialsDir: 'src/views',
+        // layoutsDir: 'src/views',
+        defaultLayout: false,
+    },
+    viewPath: 'src/views',
+    extName: '.handlebars',
+};
+
+transporter.use('compile', hbs(handleBarOptions));
 
 // Define the email options
 export function sendMail(recipient, subject, text, html) {

@@ -167,3 +167,27 @@ export const DeclareResultForContest = AsyncHandler(async (req, res) => {
     throw new ApiError(500, err.message);
   }
 });
+
+export const SendResult = AsyncHandler(async (req, res) => {
+  try {
+    if (!req.user) {
+      throw new ApiError(401, "Unauthorized Access");
+    }
+    if (!req.user.type === "admin") {
+      throw new ApiError(403, "Access Forbidden");
+    }
+
+    const {resultList} = req.body;
+
+    for (const result of resultList) {
+      const res = Result.findById(result.id).populate("userId");
+      const user = await User.findById(res.userId);
+
+      await sendDeclaredResult(user.email, user.name, user.userId, res.totalMarks, "Selected");
+    }
+
+    return res.json(new ApiResponse(200, {}, "Result Sent"));
+  } catch (err) {
+    throw new ApiError(500, err.message);
+  }
+})
