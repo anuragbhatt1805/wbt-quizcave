@@ -177,7 +177,7 @@ export const SendResult = AsyncHandler(async (req, res) => {
     const {resultList} = req.body;
 
     for (const result of resultList) {
-      const reslt = Result.findById(result).populate("userId").populate("contestId");
+      const reslt = await Result.findById(result).populate("userId").populate("contestId");
 
       if (reslt.selected) {
         continue;
