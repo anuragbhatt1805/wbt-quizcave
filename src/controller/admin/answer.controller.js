@@ -180,20 +180,21 @@ export const SendResult = AsyncHandler(async (req, res) => {
     const {resultList} = req.body;
 
     for (const result of resultList) {
-      const res = Result.findById(result.id).populate("userId").populate("contestId");
+      const reslt = Result.findById(result.id).populate("userId").populate("contestId");
 
-      if (res.selected) {
+      if (reslt.selected) {
         continue;
       } else {
-        res.selected = true;
-        await res.save();
+        reslt.selected = true;
+        await reslt.save();
       }
 
-      await sendDeclaredResult(res?.userId?.email, res?.userId?.name, res.sumbittedOn);
+      await sendDeclaredResult(reslt?.userId?.email, reslt?.userId?.name, reslt.sumbittedOn);
     }
 
     return res.json(new ApiResponse(200, {}, "Result Sent"));
   } catch (err) {
+    console.log(err);
     throw new ApiError(500, err.message);
   }
 })
