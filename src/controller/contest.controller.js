@@ -97,7 +97,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
 
         const questionsEasy = await Question.aggregate([
             { $match: { set: set, difficult: "easy" } },
-            { $sample: { size: 10 } },
+            { $sample: { size: 40 } },
             { $project: {
                 _id : 1,
                 difficult: 1,
@@ -114,7 +114,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
 
         const questionsMedium = await Question.aggregate([
             { $match: { set: set, difficult: "medium" } },
-            { $sample: { size: 10 } },
+            { $sample: { size: 5 } },
             { $project: {
                 _id : 1,
                 difficult: 1,
@@ -129,7 +129,7 @@ export const AttemptContest = AsyncHandler(async (req, res) => {
 
         const questionsHard = await Question.aggregate([
             { $match: { set: set, difficult: "hard" } },
-            { $sample: { size: 4 } },
+            { $sample: { size: 1 } },
             { $project: {
                 _id : 1,
                 difficult: 1,

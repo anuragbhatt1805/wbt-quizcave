@@ -24,8 +24,6 @@ export const GetAllContest = AsyncHandler(async (req, res) => {
 
     if (req?.query?.past === "true") {
       data.endDate = { $lt: new Date() };
-    } else {
-      data.endDate = { $gt: new Date() };
     }
 
     const contests = await Contest.find({ ...data }).select(
@@ -72,7 +70,7 @@ export const GetResultsForContest = AsyncHandler(async (req, res) => {
     const results = await Result.find({
       contestId: contest._id,
       declared: true,
-    }).populate("userId").select("-answers").sort({ totalMarks: -1, sumbittedOn: 1});
+    }).populate("userId").populate({path:'answers.questionId',model:'Question'}).sort({ totalMarks: -1, sumbittedOn: 1});
 
     if (!results) {
       throw new ApiError(404, "No Results Found");

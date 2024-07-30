@@ -33,8 +33,8 @@ export const sendRegistrationMail= async (name, email, userId, password) => {
       <div class="px-5">
         <h2 class='fs-4 mt-4'> Welcome to Whiteboard Technologies! You're registered in our Career Portal</h2>
         <p class='mt-4'>Dear <b>${name}</b>,</p>
-        <p>Welcome to Project Station</p>
-        <p>You can now log in to our Career Portal at $[<a href="http://192.168.1.154/">192.168.1.154</a>] using the credentials provided below:</p>
+        <p>Welcome to Whiteboard Technologies Pvt. Ltd.</p>
+        <p>You can now log in to our Career Portal at [<a href="http://192.168.1.154/">192.168.1.154</a>] using the credentials provided below:</p>
           <div class="card mb-4">
       <div class="card-body">
         <h5 class="card-title">User's Details</h5>
@@ -115,6 +115,7 @@ export const sendDeclaredResult = async (email, name, date) => {
     </script>
   </body>
 </html>`;
-
+	
+	console.log(text, email);
     await sendMail(email, subject, text, html);
 }

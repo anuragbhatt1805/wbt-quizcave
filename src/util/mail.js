@@ -3,19 +3,25 @@ import nodemailer from 'nodemailer';
 
 // Create a transporter using SMTP server information from process.env
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    secure: process.env.SMTP_SECURE === 'true', // Set to true if using SSL/TLS
+    host: "smtpout.secureserver.net",
+    port: 465,
+    secure: true, // Set to true if using SSL/TLS
+	secureConnection: false,
+	requireTLS: true,
+	debug: true,
     auth: {
-        user: process.env.SMTP_USERNAME,
-        pass: process.env.SMTP_PASSWORD,
+        user: "engineering.tests@whiteboardtec.com",
+        pass: "Vision**%%21",
     },
+    tls: {
+       ciphers: 'SSLv3'
+    }
 });
 
 // Define the email options
 export function sendMail(recipient, subject, text, html) {
     const mailOptions = {
-        from: 'careers@whiteboardtec.com',
+        from: 'engineering.tests@whiteboardtec.com',
         to: recipient,
         subject: subject,
         text: text,

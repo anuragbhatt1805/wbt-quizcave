@@ -81,7 +81,6 @@ const UserSchema = new mongoose.Schema({
     },
     passingYear: {
         type: Number,
-        required: true,
     },
     currAddress: {
         type: AddressSchema
@@ -146,7 +145,7 @@ UserSchema.methods.generateAccessToken = async function() {
             email: this.email,
             userId: this.userId
         },
-        process.env.ACCESS_TOKEN_SECRET,
+        'b4c537878c67a487532e85ad5210a1d3836c02d267c359d396bb4d6abadeaf2f',
         {
             expiresIn: '7d'
         }
@@ -161,7 +160,7 @@ UserSchema.methods.generateRefreshToken = async function() {
             email: this.email,
             userId: this.userId
         },
-        process.env.REFRESH_TOKEN_SECRET,
+        '2574766afd105a34115e144f0d357681c4daff9d26a129092b3b489cfe5b460b',
         {
             expiresIn: '30d'
         }
